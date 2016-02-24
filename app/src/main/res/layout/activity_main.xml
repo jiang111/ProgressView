@@ -13,5 +13,6 @@
     <android.jiang.com.progressview.ProgressView
 
         android:layout_width="match_parent"
+        android:id="@+id/ffff"
         android:layout_height="100dp" />
 </LinearLayout>

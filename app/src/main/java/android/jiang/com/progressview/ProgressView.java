@@ -33,31 +33,88 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jiang on 16/2/24.
  */
 public class ProgressView extends View {
 
-    private static final String TAG = "ProgressView";
 
+    /**
+     * 绘制的笔
+     */
     private Paint mPaint;
+
+    /**
+     * 控件的宽高
+     */
     private int mWidth;
     private int mHeight;
+
+    /**
+     * 圆的半径
+     */
     private int circleRadius;
+    /**
+     * 圆弧的半径
+     */
     private int stokenRadius;
+
+    /**
+     * 圆弧的宽度
+     */
     private int stokenWidth;
+    /**
+     * 线与圆弧之间的距离
+     */
     private int linePadding;
+
+    /**
+     * 选中和没选中的颜色
+     */
     private int checkedColor = Color.WHITE;
-    private int uncheckedColor = Color.DKGRAY;
+    private int uncheckedColor = Color.parseColor("#ECA6AD");
+
+
+    /**
+     * 文字的大小
+     */
     private int normaltextSize;
+
+    /**
+     * 文字距离顶部的距离
+     */
     private int textPaddingTop;
 
-    private int circleCount;
 
+    /**
+     * 个数
+     */
+    private int circleCount = 0;
+
+    /**
+     * 文本的信息
+     */
     private Paint.FontMetricsInt fontMetricsInt;
+
+    /**
+     * 圆的y轴
+     */
+    private int circlePointY;
+
+    /**
+     * 根据宽度算出平均分得的宽度
+     */
+    private int everyWidth;
+
+    /**
+     * 数据
+     */
+    private List<Model> mModels = new ArrayList<>();
 
 
     public ProgressView(Context context) {
@@ -70,11 +127,13 @@ public class ProgressView extends View {
 
     public ProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        circleCount = 3;
         initValues();
         initpaint();
     }
 
+    /**
+     * 配置一些初始值
+     */
     private void initValues() {
         circleRadius = Utils.dip2px(getContext(), 3);
         stokenRadius = Utils.dip2px(getContext(), 6);
@@ -84,70 +143,141 @@ public class ProgressView extends View {
         normaltextSize = Utils.sp2px(getContext(), 14);
     }
 
+    /**
+     * 配置画笔
+     */
     private void initpaint() {
         mPaint = new Paint();
         mPaint.setStrokeWidth(stokenWidth);
+        mPaint.setTextSize(normaltextSize);
+        fontMetricsInt = mPaint.getFontMetricsInt();
     }
 
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        configValues();
+
+    }
+
+    /**
+     * 配置需要用到的数据
+     */
+    private void configValues() {
         mWidth = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         mHeight = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
 
+        circlePointY = mHeight / 2;
+        everyWidth = mWidth / (circleCount + 1);
+    }
+
+    public void setData(List<Model> models) {
+        mModels = models;
+        fillInfo();
+        invalidate();
+
+    }
+
+    private void fillInfo() {
+        circleCount = mModels.size();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawCircle(canvas);
-        drawLine(canvas);
+        if (circleCount == 0)
+            return;
+        for (int i = 0; i < circleCount; i++) {
+            int color = getColor(i);
+            boolean needStoken = needStoken(i);
+            drawCircleWithParam(canvas, everyWidth * (i + 1), circlePointY, needStoken, color, mModels.get(i).name);
+            if (i == circleCount - 1)
+                return;
+            drawLine(canvas, everyWidth * (i + 1), everyWidth * (i + 2), getColor(i + 1));
+
+        }
     }
 
-    private void drawCircle(Canvas canvas) {
 
-//        for (int i = 0; i < circleCount; i++) {
-//            int circlePointX = mWidth / circleCount + 1 - i;
-//
-//        }
-
-        int circlePointX = mWidth / circleCount + 1;
-        int circlePointY = mHeight / 2;
-        drawCircleWithParam(canvas, circlePointX, circlePointY, true, checkedColor, "确认密码");
-
-        int twoCirclePointX = mWidth - circlePointX;
-        drawCircleWithParam(canvas, twoCirclePointX, circlePointY, false, uncheckedColor, "邮件地址");
+    private int getColor(int i) {
+        int color;
+        Model model = mModels.get(i);
+        if (model.state == 1) {
+            color = checkedColor;
+        } else if (model.state == 2) {
+            color = checkedColor;
+        } else {
+            color = uncheckedColor;
+        }
+        return color;
     }
 
-    private void drawLine(Canvas canvas) {
+    private boolean needStoken(int i) {
+        boolean needStoken = false;
+        Model model = mModels.get(i);
+        if (model.state == 2) {
+            needStoken = true;
+        }
 
-        int startX = mWidth / circleCount + 1 + stokenRadius + stokenWidth + linePadding;
-        int endX = mWidth / 2 + (mWidth / 2 - startX) + stokenWidth + (stokenRadius - circleRadius);
+        return needStoken;
+    }
+
+    /**
+     * 画线
+     *
+     * @param canvas
+     * @param circleStartX
+     * @param mayEndX
+     * @param color
+     */
+    private void drawLine(Canvas canvas, int circleStartX, int mayEndX, int color) {
+
+        int startX = circleStartX + stokenRadius + stokenWidth + linePadding;
+        int endX = mayEndX - stokenWidth - stokenRadius - linePadding;
         int startY = mHeight / 2;
 
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(checkedColor);
+        mPaint.setColor(color);
         canvas.drawLine(startX, startY, endX, startY, mPaint);
     }
 
+    /**
+     * 画圆
+     *
+     * @param canvas
+     * @param circleX
+     * @param circleY
+     * @param needStoken
+     * @param color
+     * @param value
+     */
     private void drawCircleWithParam(Canvas canvas, int circleX, int circleY, boolean needStoken, int color, String value) {
 
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(color);
         canvas.drawCircle(circleX, circleY, circleRadius, mPaint);
-        mPaint.setTextSize(normaltextSize);
         int textWidth = (int) mPaint.measureText(value, 0, value.length());
         int textStartX = circleX - textWidth / 2;
-        fontMetricsInt = mPaint.getFontMetricsInt();
         int textStartY = Math.abs(Math.abs(fontMetricsInt.bottom) + Math.abs(fontMetricsInt.top)) / 2 + circleY + textPaddingTop;
         textStartY += stokenRadius + stokenWidth;
 
-        Log.i(TAG, "drawCircleWithParam: " + textWidth + ":" + fontMetricsInt.toString() + ";" + textStartX + ":" + textStartY + ";" + circleX + ":" + circleY);
         canvas.drawText(value, textStartX, textStartY, mPaint);
         if (needStoken) {
             mPaint.setStyle(Paint.Style.STROKE);
             canvas.drawCircle(circleX, circleY, stokenRadius, mPaint);
         }
+    }
+
+
+    static class Model {
+        String name;
+
+        public Model(String name, int state) {
+            this.name = name;
+            this.state = state;
+        }
+
+        int state;  // 1 过去了  2 正开始  3 还没开始
     }
 }
