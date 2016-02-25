@@ -117,6 +117,19 @@ public class ProgressView extends View {
     private List<Model> mModels = new ArrayList<>();
 
 
+    /**
+     * 常量
+     *
+     * @param context
+     */
+    public static final int CIRCLE_RADIUS = 4;
+    public static final int STOKEN_RADIUS = 9;
+    public static final int STOKEN_WIDTH = 2;
+    public static final int LINE_PADDING = 6;
+    public static final int TEXTPADDINGTOP = 10;
+    public static final int NORMALTEXTSIZE = 14;
+
+
     public ProgressView(Context context) {
         this(context, null);
     }
@@ -135,12 +148,12 @@ public class ProgressView extends View {
      * 配置一些初始值
      */
     private void initValues() {
-        circleRadius = Utils.dip2px(getContext(), 3);
-        stokenRadius = Utils.dip2px(getContext(), 6);
-        stokenWidth = Utils.dip2px(getContext(), 1);
-        linePadding = Utils.dip2px(getContext(), 3);
-        textPaddingTop = Utils.dip2px(getContext(), 10);
-        normaltextSize = Utils.sp2px(getContext(), 14);
+        circleRadius = Utils.dip2px(getContext(), CIRCLE_RADIUS);
+        stokenRadius = Utils.dip2px(getContext(), STOKEN_RADIUS);
+        stokenWidth = Utils.dip2px(getContext(), STOKEN_WIDTH);
+        linePadding = Utils.dip2px(getContext(), LINE_PADDING);
+        textPaddingTop = Utils.dip2px(getContext(), TEXTPADDINGTOP);
+        normaltextSize = Utils.sp2px(getContext(), NORMALTEXTSIZE);
     }
 
     /**
