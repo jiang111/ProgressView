@@ -21,10 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
         final List<ProgressView.Model> models = new ArrayList<>();
 
-        models.add(new ProgressView.Model("确认密码", 2));
-        models.add(new ProgressView.Model("输入邮箱", 3));
-        models.add(new ProgressView.Model("再次输入", 3));
-        models.add(new ProgressView.Model("最终完成", 3));
+        models.add(new ProgressView.Model("确认密码", ProgressView.STARTING));
+        models.add(new ProgressView.Model("输入邮箱", ProgressView.AFTER));
+        models.add(new ProgressView.Model("再次输入", ProgressView.AFTER));
+        models.add(new ProgressView.Model("最终完成", ProgressView.AFTER));
 
         view.setData(models);
 
@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                models.get(position).state = 1;
-                models.get(position + 1).state = 2;
+                models.get(position).state = ProgressView.BEFORE;
+                models.get(position + 1).state = ProgressView.STARTING;
                 position++;
                 view.setData(models);
             }

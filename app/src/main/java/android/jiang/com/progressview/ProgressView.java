@@ -128,6 +128,9 @@ public class ProgressView extends View {
     public static final int LINE_PADDING = 6;
     public static final int TEXTPADDINGTOP = 10;
     public static final int NORMALTEXTSIZE = 14;
+    public static final int AFTER = 144;
+    public static final int STARTING = 143;
+    public static final int BEFORE = 142;
 
 
     public ProgressView(Context context) {
@@ -216,9 +219,9 @@ public class ProgressView extends View {
     private int getColor(int i) {
         int color;
         Model model = mModels.get(i);
-        if (model.state == 1) {
+        if (model.state == BEFORE) {
             color = checkedColor;
-        } else if (model.state == 2) {
+        } else if (model.state == STARTING) {
             color = checkedColor;
         } else {
             color = uncheckedColor;
@@ -229,7 +232,7 @@ public class ProgressView extends View {
     private boolean needStoken(int i) {
         boolean needStoken = false;
         Model model = mModels.get(i);
-        if (model.state == 2) {
+        if (model.state == ProgressView.STARTING) {
             needStoken = true;
         }
 
@@ -291,6 +294,6 @@ public class ProgressView extends View {
             this.state = state;
         }
 
-        int state;  // 1 过去了  2 正开始  3 还没开始
+        int state;  // BEFORE STARTING AFTER
     }
 }
