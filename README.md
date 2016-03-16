@@ -1,2 +1,4 @@
 # ProgressView
-![](https://raw.githubusercontent.com/jiang111/ProgressView/master/art/art.jpeg)
+* 一个用于展示注册进度的view <br /> 
+
+![](https://raw.githubusercontent.com/jiang111/ProgressView/master/art/6.gif)
