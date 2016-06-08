@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="android.jiang.com.progressview.MainActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
 
     <android.jiang.com.progressview.ProgressView
-
-        android:layout_width="match_parent"
         android:id="@+id/ffff"
-        android:background="@android:color/holo_red_dark"
-        android:layout_height="150dp" />
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@android:color/holo_red_dark"/>
+
+    <FrameLayout
+        android:id="@+id/id_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
