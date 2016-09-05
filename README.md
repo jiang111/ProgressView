@@ -4,12 +4,6 @@
 ![](https://raw.githubusercontent.com/jiang111/ProgressView/master/art/6.gif)
 
 
-
-###个人微信公众号:
-公众号:androidesigner <br />
-![](https://raw.githubusercontent.com/jiang111/wechat_article/master/qrcode.jpg)
-
-
 ###推荐
 
 >* 收集Android你不知道的那些小技巧:https://github.com/jiang111/awesome-android-tips
